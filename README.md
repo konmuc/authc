@@ -214,9 +214,15 @@ The `/signout`-Resource allows an application to log out an logged in user.
 
 # Testing
 
+The @konmuc/authc package use [`intern`](https://theintern.io/) as test runner.
+
+To run the tests first run start the test server.
+
 ```
 npm run server
 ```
+
+Then execute the following command to run the tests.
 
 ```
 npm run test
