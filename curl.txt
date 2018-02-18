@@ -1,0 +1,34 @@
+# /signup
+curl -H 'Content-Type: application/json' \
+    -d '{"username":"testuser","firstName":"Test","lastName":"User","email":"testuser@mail.com","password":"password"}' \
+    -X POST http://localhost:9999/signup
+
+# /signin
+curl -H 'Content-Type: application/json' \
+    -d '{"username":"testuser","password":"testuser"}' \
+    -X POST http://localhost:9999/signin
+
+# /token
+curl -H 'Content-Type: application/json' \
+    -d '{"username":"testuser","clientId":"d4d8112b-3938-4513-bf5c-b0aea9be95b8","refreshToken":"k3Yx8hdefPdBtJxfwc3muUUX78EQIDzxUDy0bujNCaxAkPkryk5CfUpJcb1CMulmfjmub8k7L17iGXa8tg1M6jI3bQuNRexkZX2582xMr0o32DC377nwb3Vg4XTofJY81Rt00NrQJPEmYW8MwJwcUFxN9KQQSV4iHOB59Q7ZjMgcWJKRcy3k2acmNYaDUCwdM1zlInmyPKzQyFAlNGtqcyiwqhfA26r1ME0i6YAQe5163DdMJPt0sIX0UmawAYrJ"}' \
+    -X POST http://localhost:9999/token
+
+# /token invalid clientid
+curl -H 'Content-Type: application/json' \
+    -d '{"username":"testuser","clientId":"d4d8112b-3938-4513-bf5c-b0aea9be95b89","refreshToken":"k3Yx8hdefPdBtJxfwc3muUUX78EQIDzxUDy0bujNCaxAkPkryk5CfUpJcb1CMulmfjmub8k7L17iGXa8tg1M6jI3bQuNRexkZX2582xMr0o32DC377nwb3Vg4XTofJY81Rt00NrQJPEmYW8MwJwcUFxN9KQQSV4iHOB59Q7ZjMgcWJKRcy3k2acmNYaDUCwdM1zlInmyPKzQyFAlNGtqcyiwqhfA26r1ME0i6YAQe5163DdMJPt0sIX0UmawAYrJ"}' \
+    -X POST http://localhost:9999/token
+
+# /token invalid refreshToken
+curl -H 'Content-Type: application/json' \
+    -d '{"username":"testuser","clientId":"d4d8112b-3938-4513-bf5c-b0aea9be95b8","refreshToken":"k3Y8hdefPdBtJxfwc3muUUX78EQIDzxUDy0bujNCaxAkPkryk5CfUpJcb1CMulmfjmub8k7L17iGXa8tg1M6jI3bQuNRexkZX2582xMr0o32DC377nwb3Vg4XTofJY81Rt00NrQJPEmYW8MwJwcUFxN9KQQSV4iHOB59Q7ZjMgcWJKRcy3k2acmNYaDUCwdM1zlInmyPKzQyFAlNGtqcyiwqhfA26r1ME0i6YAQe5163DdMJPt0sIX0UmawAYrJ"}' \
+    -X POST http://localhost:9999/token
+
+# /access 
+curl -H 'Content-Type: application/json' \
+    -H 'x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNmcmV5IiwiY2xpZW50SWQiOiJkNGQ4MTEyYi0zOTM4LTQ1MTMtYmY1Yy1iMGFlYTliZTk1YjgiLCJpYXQiOjE1MTgyNzUyNDYsImV4cCI6MTUxODI3NTQyNn0.rOGwdlwa-iHVS75o-bw07UFfz7X0OEZkzisMZ94phhc' \
+    -X GET http://localhost:9999/
+
+# /logout
+curl -H 'Content-Type: application/json' \
+    -d '{"username":"testuser","clientId":"d4d8112b-3938-4513-bf5c-b0aea9be95b8"}' \
+    -X POST http://localhost:9999/signout
