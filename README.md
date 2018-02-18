@@ -69,7 +69,7 @@ mongoose.connect('mongodb://localhost/authc')
         ...
 
         // start express app
-        app.liste(PORT);
+        app.listen(PORT, () => { console.log(`Listening on ${PORT}.`); });
     });
 ```
 
