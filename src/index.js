@@ -2,7 +2,7 @@ import Bluebird from 'bluebird';
 import jwtlegacy from 'jsonwebtoken';
 import moment from 'moment';
 
-import User from './schemas/UserSchema';
+import User from './models/User';
 
 const jwt = Bluebird.promisifyAll(jwtlegacy);
 
