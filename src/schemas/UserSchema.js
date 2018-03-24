@@ -1,6 +1,8 @@
 import { Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
 
+
+// The base schema.
 var schema = {
     username: {
         type: String,
@@ -31,6 +33,11 @@ var schema = {
 };
 
 
+/**
+ * Creates a UserSchema.
+ * 
+ * @returns {UserSchema}
+ */
 export function create() {
     
     const UserSchema = new Schema(schema);
@@ -132,7 +139,12 @@ export function create() {
     return UserSchema;
 }
 
-
+/**
+ * Allows to configure the UserSchema return by create.
+ * 
+ * @param {Object} config A mongoose schema config, which extends the existing schema.
+ * 
+ */
 export function configure(config = {}) {
     schema = { ...schema, ...config };
 }
