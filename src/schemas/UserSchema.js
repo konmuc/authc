@@ -16,19 +16,6 @@ var schema = {
     },
     clients: {
         type: Array
-    },
-    firstName: {
-        type: String,
-        trim: true
-    },
-    lastName: {
-        type: String,
-        trim: true
-    },
-    email: {
-        type: String,
-        unique: true,
-        trim: true
     }
 };
 
