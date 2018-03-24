@@ -2,7 +2,7 @@
 import fetch from 'node-fetch';
 
 const { assert } = intern.getPlugin('chai');
-const { registerSuite,  } = intern.getInterface('object');
+const { registerSuite } = intern.getInterface('object');
 
 const USERNAME = 'testuser';
 const password = 'password';
