@@ -46,7 +46,7 @@ export function create() {
      */
     UserSchema.statics.authenticateByPassword = async function({ username, password }) {
         try {
-            const { default : User } = await import('../models/User');
+            const { User } = await import('../models');
             const { user } = await User.get({ username });
     
             // compare the password with the users encrypted password.
@@ -73,7 +73,7 @@ export function create() {
      */
     UserSchema.statics.authenticateByToken = async function({ username, refreshToken, clientId }) {
         try {
-            const { default : User } = await import('../models/User');
+            const { User } = await import('../models');
             const { user } = await User.get({ username });
     
             // check if passed clientId and refreshToken are valid for username
@@ -111,7 +111,7 @@ export function create() {
         try {
             var user;
             try {
-                const { default : User } = await import('../models/User');
+                const { User } = await import('../models');
                 user = await User.findOne({ username }).exec();
             } catch (err) {
                 console.error(err);

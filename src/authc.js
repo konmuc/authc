@@ -2,7 +2,7 @@ import randtoken from 'rand-token';
 import uuid4 from 'uuid/v4';
 import bcrypt from 'bcrypt';
 
-import User from './models/User';
+import { User } from './models';
 import { generateAccessToken } from './index';
 
 /**
