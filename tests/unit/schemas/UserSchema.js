@@ -6,7 +6,7 @@ import UserSchema from '../../../src/schemas/UserSchema'
 
 registerSuite('user schema tests', () => {
     return {
-        'configure user': async () => {
+        'configure user schema': async () => {
 
             const User = UserSchema.create();
 
