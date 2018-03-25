@@ -83,7 +83,7 @@ export async function middleware(req, res, next) {
     }
 }
 
-export default function configure({ ...custom} = config) {
+export default function configure({ ...custom } = config) {
 
     config = { ...config, ...custom };
 
