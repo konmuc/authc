@@ -21,7 +21,7 @@ To use this package in an express application, execute the following command:
 npm install @konmuc/authc --save
 ```
 
-Before continuing it is recommended to install also the following packages:
+Before continuing it is recommended to install also the following express packages:
 
 ```
 npm install express body-parser mongoose --save
@@ -40,7 +40,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 
-// import the @konmuc/authc package
+// import the @konmuc/authc middleware and router
 import authc from '@konmuc/authc';
 import authcRouter from '@konmuc/authc/router';
 
@@ -83,14 +83,14 @@ The `authc` middleware can be configured by the following options:
 |-----------|-------------|
 | `secret` (required) | The secret which will be used for signing JWTs. It is recommend to use here an SH256-Hash. | 
 | `accessTokenExpiration` (optional) | The lifespan of an access token, after it was created. Defaults to 10 minutes. This property accepts any valid [moment.js](https://momentjs.com/) time configuration. |
-| `accessTokenPayload` (optional) | A function, which allows to modify the payload for the JWT access token. The function gets the related user passed in as argument.
+| `accessTokenPayload` (optional) | A function, which allows to modify the payload for the JWT access token. The function gets the related user passed in as argument. |
 
 
 # Authentication Workflow
 
-The authentication mechanism is based on an access token and refresh token pattern. The authentication process follows the following workflow:
+The authentication mechanism is based on the access token and refresh token pattern. The authentication process follows the following workflow:
 
-1. A user sends its credentials (username and password) to the `/signin` resource. If a user has no credentials yet, he or she needs to register using the `/signup` resource.
+1. A user sends its credentials (username and password) to the `/signin` resource. If a user has no credentials yet, the user needs to register using the `/signup` resource.
 
 2. If the credentials where valid, the `/signin` resource responded with the following parameters as json:
 
@@ -103,15 +103,13 @@ The authentication mechanism is based on an access token and refresh token patte
 
 4. Before an `accessToken` will expire, a client can use the `refreshToken` to request a new `accessToken` via the `/token` resource.
 
-5. To singout a user, a client need to send the `clientId` and the username via the `/signout` resource.
+5. To singout a user, a client need to send the `clientId` and the `username` via the `/signout` resource.
 
 # Authentication REST-API
 
-> The authentication resources always response with HTTP 200. To verify the state of an response, it includes in each json response the key `status`. This key represents the HTTP state.
-
 ## `/signup`
 
-The `/signup`-Resource allows to register a new user for the application.
+The `/signup`-Resource allows to register a new user for an application.
 
 ### Request
 
@@ -186,7 +184,7 @@ The `/token`-Resource allows an application to inquire a new access token for a 
 | Parameter | Description |
 |-----------|-------------|
 | `accessToken` | A token for authenticating the user on each request. This token expires. |
-| `expiresIn` | Indicates when the `accessToken` is going to be expired. |
+| `expiresIn` | Indicates when the `accessToken` will expire in ms. |
 
 ## `/signout`
 
