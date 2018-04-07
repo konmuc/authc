@@ -75,16 +75,57 @@ mongoose.connect('mongodb://localhost/authc')
 
 # Middelware API
 
-## authc(options)
+## @konmuc/authc(options)
 
 The `authc` middleware can be configured by the following options:
 
 | Parameter | Description |
 |-----------|-------------|
-| `secret` (required) | The secret which will be used for signing JWTs. It is recommend to use here an SH256-Hash. | 
-| `accessTokenExpiration` (optional) | The lifespan of an access token, after it was created. Defaults to 10 minutes. This property accepts any valid [moment.js](https://momentjs.com/) time configuration. |
-| `accessTokenPayload` (optional) | A function, which allows to modify the payload for the JWT access token. The function gets the related user passed in as argument. |
+| `secret` | The required secret which will be used for signing JWTs. It is recommend to use here an SH256-Hash. If no secret is specified an error will be thrown. | 
+| `accessTokenExpiration?` (optional) | The lifespan of an access token, after it was created. Defaults to 10 minutes. This property accepts any valid [moment.js](https://momentjs.com/) time configuration. |
+| `accessTokenPayload?` (optional) | A function, which allows to modify the payload for the JWT access token. The function gets the related user passed in as argument. |
 
+Example:
+
+```js
+import authc from '@konmuc/authc';
+
+// create the middleware
+const middleware = authc({
+    secret: APP_SECRET, // the required APP_SECRET
+    accessTokenExpiration: { minutes: 15 }, // override the defalt acces token expiration
+    accessTokenPayload: ({ email }) => { email } // only possible if the UserSchema was extend by an email property.
+});
+
+// hook the middleware
+app.use(middleware);
+
+```
+
+## @konmuc/authc/schema/UserSchema
+
+The default mongoose user schema used by `@konmuc/authc` comes with a minimum set of immutable properties. These proprties are listed in the following table.
+
+| Property | Description |
+|----------|-------------|
+| `username` | The users username, which identifies a user. |
+| `password` | The users password, which will be stored hashed. For hashing passwords the `bcrypt` library is used. |
+| `clients` | A list of all connected clients of a user. A client is identified by a `clientId`. To each client a `refreshToken` is assigned. If a client was logged out, the client has property `invalidated` equals `true`. |
+
+In some cases an application needs more parameters assigned to a user. Therefore the underlying mongoose user schema used by `@konmuc/authc` can be extended. To configure the user schema, an application can use the `@konmuc/authc/schemas/UserSchema` modules `configure` method.
+
+```js
+// import the UserSchema modules configure method
+import UserSchema from '@konmuc/authc/schemas/UserSchema';
+
+// extend the default user schema with an email field.
+UserSchema.configure({
+    email: {
+        type: String,
+    }
+});
+
+```
 
 # Authentication Workflow
 
