@@ -7,7 +7,7 @@
     "prestart": "npm run -s build",
     "start": "node dist/index.js",
     "dev": "nodemon src/index.js --exec \"node -r dotenv/config -r babel-register\"",
-    "clean": "rm -rf dist",
+    "clean": "rimraf dist",
     "build": "npm run clean && mkdir -p dist/src && babel src -s -D -d dist/src",
     "lint": "esw -w src tests",
     "pretest": "npm run build && mkdir -p dist/tests && babel tests -s -D -d dist/tests",
@@ -48,7 +48,8 @@
     "mongoose": "^5.0.4",
     "morgan": "^1.9.0",
     "node-fetch": "^2.0.0",
-    "nodemon": "^1.12.1"
+    "nodemon": "^1.12.1",
+    "rimraf": "^2.6.2"
   },
   "babel": {
     "presets": [
