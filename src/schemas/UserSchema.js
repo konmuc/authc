@@ -14,9 +14,19 @@ var schema = {
         type: String,
         required: true
     },
-    clients: {
-        type: Array
-    }
+    clients: [
+        {
+            clientId: {
+                type: String,
+                required: true
+            },
+            refreshToken: {
+                type: String,
+                required: true
+            },
+            invalidated: Boolean
+        }
+    ]
 };
 
 
