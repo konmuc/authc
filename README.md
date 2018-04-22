@@ -1,12 +1,12 @@
 # @konmuc/authc
 
-[![Build Status](https://travis-ci.org/konmuc/authz.png?branch=master)](https://travis-ci.org/konmuc/authz)
-[![npm version](https://badge.fury.io/js/%40konmuc%2Fauthc.svg)]
+[![Build Status](https://travis-ci.org/konmuc/authc.png?branch=master)](https://travis-ci.org/konmuc/authc)
+[![npm version](https://badge.fury.io/js/%40konmuc%2Fauthc.svg)](https://badge.fury.io/js/%40konmuc%2Fauthc.svg)
+[![codecov.io](https://codecov.io/gh/konmuc/authc/branch/master/graphs/badge.svg?branch=master)](https://codecov.io/github/konmuc/authc?branch=master)
 
 This package provides an authentication layer for the konmuc website.
 
 > Warning: This is work in progress
-
 
 
 @konmuc/authc has the following features:
