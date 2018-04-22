@@ -2,6 +2,8 @@ sudo: false
 language: node_js
 node_js:
 - '8'
+services:
+- mongodb
 install:
 - travis_retry npm install
 script:
