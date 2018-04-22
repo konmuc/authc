@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 
 import { User } from './models';
 import { generateAccessToken } from './index';
-
+import { errors } from './messages';
 /**
  * Logs a user in.
  * 
@@ -60,7 +60,7 @@ export async function signup(userData) {
     let exists =  await User.exists({ username: userData.username });
 
     if (exists) {
-        let err = new Error('User already exists!');
+        let err = new Error(errors.user.already.exists);
         err.status = 409;
         throw err;
     }
@@ -86,7 +86,7 @@ export async function signout({ username, clientId }) {
 
     // if no client is found, the user is probably already logged out.
     if (!client || client.invalidated) {
-        let err = new Error('User already logged out!');
+        let err = new Error(errors.user.already.loggedOut);
         err.status = 401;
         throw err;
     }

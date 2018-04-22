@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
-
+import { errors } from '../messages';
 
 // The base schema.
 var schema = {
@@ -59,7 +59,7 @@ export function create() {
             return { user };
         } catch (err) {
             console.error(err);
-            let err2 = new Error('User not found or password invalid!');
+            let err2 = new Error(errors.user.userOrPassword);
             err2.status = 401;
             throw err2;
         }
@@ -90,14 +90,14 @@ export function create() {
             if (!client) {
                 console.warn(`Unknown client=${clientId} for user=${user.username}!`);
     
-                throw new Error('Client not found');
+                throw new Error(errors.client.not.found);
             }
     
             return { user };
         } catch (err) {
             console.error(err);
     
-            let err2 = new Error('User not found or token invalid!');
+            let err2 = new Error(errors.invalid.token);
             err2.status = 401;
             throw err2;
         }
@@ -135,11 +135,11 @@ export function create() {
                 user = await User.findOne({ 'clients.refreshToken' : refreshToken }).exec();
             } catch (err) {
                 console.error(err);
-                throw new Error('User not found!');
+                throw new Error(errors.user.not.found);
             }
     
             if (!user) {
-                throw new Error('User not found!');
+                throw new Error(errors.user.not.found);
             }
     
             return { user };
@@ -166,11 +166,11 @@ export function create() {
                 user = await User.findOne({ username }).exec();
             } catch (err) {
                 console.error(err);
-                throw new Error('User not found!');
+                throw new Error(errors.user.not.found);
             }
     
             if (!user) {
-                throw new Error('User not found!');
+                throw new Error(errors.user.not.found);
             }
     
             return { user };

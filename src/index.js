@@ -3,6 +3,7 @@ import jwtlegacy from 'jsonwebtoken';
 import moment from 'moment';
 
 import { User } from './models';
+import { errors } from './messages';
 
 const jwt = Bluebird.promisifyAll(jwtlegacy);
 
@@ -39,7 +40,7 @@ export async function middleware(req, res, next) {
 
         // check if a token was provided.
         if (!token) {
-            let err = new Error('No token provided!')
+            let err = new Error(errors.missing.token)
             err.status = 401;
             throw err;
         }
@@ -51,7 +52,7 @@ export async function middleware(req, res, next) {
             decoded = jwt.verify(token, config.secret);
         } catch (err) {
             console.error(err);
-            let err2 = new Error('Invalid token provided!');
+            let err2 = new Error(errors.invalid.token);
             err2.status = 401;
             throw err2;
         }
@@ -68,7 +69,7 @@ export async function middleware(req, res, next) {
         if (!client || client.invalidated) {
             console.warn(`client=${clientId} is blacklisted`);
 
-            let err = new Error('Invalid token provided!');
+            let err = new Error(errors.invalid.token);
             err.status = 401;
             throw err;
         }
@@ -88,7 +89,7 @@ export default function configure({ ...custom } = config) {
     config = { ...config, ...custom };
 
     if (!config.secret) {
-        throw new Error('Missing secret!');
+        throw new Error(errors.missing.secret);
     }
 
     return middleware;
