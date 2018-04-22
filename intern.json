@@ -2,5 +2,11 @@
     "suites": "dist/tests/unit/**/*.js",
     "environments": [ "node" ],
     "coverage": [ "dist/src/**/*.js" ],
+    "reporters": [
+        {
+          "name": "jsoncoverage",
+          "filename": "coverage.json"
+        }
+    ],
     "instrumenterOptions": { "esModules": true }
 }
