@@ -54,12 +54,18 @@ export function create() {
             const { user } = await User.getByUsername({ username });
     
             // compare the password with the users encrypted password.
-            await bcrypt.compare(password, user.password);
-    
+            let authenticated = await bcrypt.compare(password, user.password);
+
+            if (!authenticated) {
+                let err = new Error(errors.invalid.userOrPassword);
+                err.status = 401;
+                throw err;
+            }
+
             return { user };
         } catch (err) {
             console.error(err);
-            let err2 = new Error(errors.user.userOrPassword);
+            let err2 = new Error(errors.invalid.userOrPassword);
             err2.status = 401;
             throw err2;
         }
