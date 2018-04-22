@@ -1,5 +1,6 @@
 /* global intern console */
 import fetch from 'node-fetch';
+import server from '../server';
 
 const { assert } = intern.getPlugin('chai');
 const { registerSuite } = intern.getInterface('object');
@@ -17,7 +18,9 @@ registerSuite('authentication tests', () => {
     var CLIENT_ID;
 
     return {
-        async before() {            
+        async before() {
+            await server();
+
             const body = JSON.stringify({
                 username: USERNAME,
                 password
@@ -29,13 +32,36 @@ registerSuite('authentication tests', () => {
                 body
             };
 
-            let { status } = await fetch(`${url}/signup`, request);
+            let res = await fetch(`${url}/signup`, request);
+
+            let { status } = await res.json();
 
             assert.oneOf(status, [ 200, 409 ]);
         },
 
 
         tests: {
+
+            'sign up existing user': async() => {
+                const body = JSON.stringify({
+                    username: USERNAME,
+                    password
+                });
+    
+                const request = {
+                    method: 'POST',
+                    headers: { ...headers },
+                    body
+                };
+    
+                let res = await fetch(`${url}/signup`, request);
+
+                let { status } = await res.json();
+
+                assert.equal(status, 409);
+            },
+
+
             'sign user in': async () => {
                 // build the reqest body
                 const body = JSON.stringify({
@@ -77,6 +103,7 @@ registerSuite('authentication tests', () => {
                 ACCESS_TOKEN = accessToken;
                 CLIENT_ID = clientId;
             },
+
             'acccess secured resource': async() => {
                 // build the request object
                 const request = {
@@ -102,6 +129,49 @@ registerSuite('authentication tests', () => {
                 assert.equal(status, 200);
                 assert.isTrue(secured);
             },
+
+
+            'access secured resource with invalid access token': async() => {
+                // build the request object
+                const request = {
+                    method: 'GET',
+                    headers: {
+                        'x-access-token': 'invalid',
+                        ...headers
+                    }
+                };
+
+                // try to access the secured resource
+                const res = await fetch(`${url}/`, request);
+
+                // parse response to json
+                const { status } = await res.json();
+
+                assert.equal(status, 401);
+            },
+
+
+            'access secured resource without access token': async() => {
+                // build the request object
+                const request = {
+                    method: 'GET',
+                    headers: {
+                        ...headers
+                    }
+                };
+
+                // try to access the secured resource
+                const res = await fetch(`${url}/`, request);
+
+                // parse response to json
+                const { status, message } = await res.json();
+
+                assert.equal(status, 401);
+            },
+
+
+
+
             'request a new access token': async() => {
                 // build the request body
                 const body = JSON.stringify({
@@ -134,6 +204,8 @@ registerSuite('authentication tests', () => {
                 assert.isString(accessToken);
                 assert.isNumber(expiresIn);
             },
+
+
             'log user out': async() => {
                 // build the request body
                 const body = JSON.stringify({
@@ -163,6 +235,34 @@ registerSuite('authentication tests', () => {
                 assert.equal(username, USERNAME)
                 assert.equal(status, 200);
             },
+
+
+            'log logged out user out': async() => {
+                // build the request body
+                const body = JSON.stringify({
+                    clientId: CLIENT_ID,
+                    username: USERNAME
+                });
+
+                // build the request object
+                const request = {
+                    method: 'POST',
+                    headers: { ...headers },
+                    body
+                };
+
+                // trigger signout request
+                const res = await fetch(`${url}/signout`, request);
+
+                // parse response to json
+                const {
+                    status
+                } = await res.json();
+
+                assert.equal(status, 401);
+            },
+
+
             'access secured route with logged out user credentials': async() => {
                 // build request object
                 const request = {
@@ -175,13 +275,12 @@ registerSuite('authentication tests', () => {
 
                 // request secured resource with invalid credentials
                 const res = await fetch(`${url}/`, request);
-
                 // parse response to json
                 const {
                     status,
                     ...error
                 } = await res.json();
-                
+
                 // some assertations
                 assert.isNotEmpty(error);
                 assert.equal(status, 401);
