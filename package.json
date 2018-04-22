@@ -12,7 +12,7 @@
     "lint": "esw -w src tests",
     "pretest": "npm run build && mkdir -p dist/tests && babel tests -s -D -d dist/tests",
     "test": "node_modules/.bin/intern",
-    "prepublishOnly": "npm run test && ynpm run build && cp package.json dist/src/package.json && cp README.md dist/src/README.md"
+    "prepublishOnly": "npm run test && npm run build && cp package.json dist/src/package.json && cp README.md dist/src/README.md"
   },
   "repository": {
     "type": "git",
