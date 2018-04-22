@@ -72,8 +72,8 @@ router.post('/signout', async (req, res, next) => {
             
         // send response to the client.
         res.status(200).json({
-            username: user.username,
-            status: 200
+            status: 200,
+            username: user.username
         });
     } catch (err) {
         next(err);
