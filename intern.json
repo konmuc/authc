@@ -1,5 +1,6 @@
 {
     "suites": "dist/tests/unit/**/*.js",
     "environments": [ "node" ],
+    "coverage": ["dist/src/**/*.js"],
     "instrumenterOptions": { "esModules": true }
 }
