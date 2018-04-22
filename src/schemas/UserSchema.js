@@ -51,7 +51,7 @@ export function create() {
     UserSchema.statics.authenticateByPassword = async function({ username, password }) {
         try {
             const { User } = await import('../models');
-            const { user } = await User.get({ username });
+            const { user } = await User.getByUsername({ username });
     
             // compare the password with the users encrypted password.
             await bcrypt.compare(password, user.password);
@@ -75,10 +75,10 @@ export function create() {
      * 
      * @returns {Promise<User>}
      */
-    UserSchema.statics.authenticateByToken = async function({ username, refreshToken, clientId }) {
+    UserSchema.statics.authenticateByToken = async function({ refreshToken, clientId }) {
         try {
             const { User } = await import('../models');
-            const { user } = await User.get({ username });
+            const { user } = await User.getByToken({ refreshToken });
     
             // check if passed clientId and refreshToken are valid for username
             const client = user.clients
@@ -88,7 +88,7 @@ export function create() {
             // if no client is found, this means wether the requested client was invalidated or
             // there is a missmatch between clientId and refreshToken.
             if (!client) {
-                console.warn(`Unknown client=${clientId} for user=${username}!`);
+                console.warn(`Unknown client=${clientId} for user=${user.username}!`);
     
                 throw new Error('Client not found');
             }
@@ -102,16 +102,63 @@ export function create() {
             throw err2;
         }
     };
-    
+
+
     /**
-     * Fetch a user.
+     * Verifies if a username already exists.
+     * 
+     * @param {Object} params
+     * @param {String} params.username The username to verify.
+     * 
+     * @returns {Promise<Boolean>}
+     */
+    UserSchema.statics.exists = async function({ username }) {
+        const { User } = await import('../models');
+
+        return ( await User.findOne({ username }).exec() ) != null;
+    };
+
+
+    /**
+     * Fetch a user by its referesh token.
+     * 
+     * @param {Object} params
+     * @param {String} params.refreshToken The user to fetch.
+     * 
+     * @returns {Promise<User>}
+     */
+    UserSchema.statics.getByToken = async function({ refreshToken }) {
+        try {
+            var user;
+            try {
+                const { User } = await import('../models');
+                user = await User.findOne({ 'clients.refreshToken' : refreshToken }).exec();
+            } catch (err) {
+                console.error(err);
+                throw new Error('User not found!');
+            }
+    
+            if (!user) {
+                throw new Error('User not found!');
+            }
+    
+            return { user };
+        } catch (err) {
+            err.status = 401;
+            throw err;
+        }
+    };
+
+
+    /**
+     * Fetch a user by its username.
      * 
      * @param {Object} params
      * @param {String} params.username The user to fetch.
      * 
      * @returns {Promise<User>}
      */
-    UserSchema.statics.get = async function({ username }) {
+    UserSchema.statics.getByUsername = async function({ username }) {
         try {
             var user;
             try {

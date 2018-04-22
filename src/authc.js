@@ -79,7 +79,7 @@ export async function signup(userData) {
  * @returns {Promise<any>}
  */
 export async function signout({ username, clientId }) {
-    const { user } = await User.get({ username });
+    const { user } = await User.getByUsername({ username });
 
     // find the client from which the user wishes to log out.
     let client = user.clients.find(client =>  client.clientId === clientId);

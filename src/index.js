@@ -60,12 +60,12 @@ export async function middleware(req, res, next) {
         const { username, clientId } = decoded;
         
         // search for a user.
-        const { user } = await User.get({ username });
+        const { user } = await User.getByUsername({ username });
 
         // fetch the client
         const client = user.clients.find(client => client.clientId === clientId);
         // check if the client is invalidated
-        if (client.invalidated) {
+        if (!client || client.invalidated) {
             console.warn(`client=${clientId} is blacklisted`);
 
             let err = new Error('Invalid token provided!');
