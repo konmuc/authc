@@ -7,10 +7,6 @@ import configure from '../../src/index';
 const { assert } = intern.getPlugin('chai');
 const { registerSuite } = intern.getInterface('object');
 
-intern.on('runEnd', () => {
-    process.exit();
-})
-
 const USERNAME = 'testuser';
 const password = 'password';
 const port = 9999;

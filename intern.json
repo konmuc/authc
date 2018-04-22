@@ -2,7 +2,9 @@
     "suites": "dist/tests/unit/**/*.js",
     "environments": [ "node" ],
     "coverage": [ "dist/src/**/*.js" ],
+    "plugins": [ "dist/tests/plugins/db.js" ],
     "reporters": [
+        "runner",
         {
           "name": "jsoncoverage",
           "filename": "coverage.json"

@@ -1,5 +1,4 @@
 /* global Promise */
-import mongoose from 'mongoose';
 import express from 'express';
 import logger from 'morgan';
 import bodyParser from 'body-parser';
@@ -10,8 +9,6 @@ import authRouter from '../src/router';
 const port = 9999;
 
 export default async function initServer() {
-    await mongoose.connect('mongodb://localhost/authctest');
-
     return new Promise((resolve) => {
         // create an app instance
         const app = express();

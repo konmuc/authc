@@ -1,5 +1,4 @@
 /* global intern */
-import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import { create, configure } from '../../../src/schemas/UserSchema';
 import User from '../../../src/models/User';
@@ -17,9 +16,6 @@ registerSuite('user schema tests', () => {
     return {
         
         async before() {
-            await mongoose.connect('mongodb://localhost/authctest');
-            
-
             // first try to fetch the test user.
             let user = await User.findOne({ username: USERNAME }).exec();
 
@@ -54,7 +50,7 @@ registerSuite('user schema tests', () => {
             let user = await User.findOne({ username: USERNAME }).exec();
     
             console.info('Remove user.');
-            return user.remove();
+            await user.remove();
         },
 
 
