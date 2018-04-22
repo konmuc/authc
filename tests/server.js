@@ -47,7 +47,7 @@ async function run() {
         let { status = 500, message } = err;
         console.error(err);
         if (status === 500) message = 'An internal server error occured.';
-        res.status(200).send({ status, message });
+        res.status(status).send({ status, message });
     });
 
     app.listen(port, () => { console.info(`Listening on port ${port}`); });
