@@ -163,9 +163,6 @@ The `/signup`-Resource allows to register a new user for an application.
 |-----------|-------------|
 | `username` | The users username. |
 | `password` | The users password. |
-| `firstName?` | The users first name. |
-| `lastName?` | The users last name. |
-| `email?` | The users email. |
 
 ### Response
 
@@ -214,7 +211,6 @@ The `/token`-Resource allows an application to inquire a new access token for a 
 
 | Parameter | Description |
 |-----------|-------------|
-| `username` | The users username. |
 | `refreshToken` | The refresh token, which this is owned by this user. |
 | `clientId` | The client id which is assigned to the refresh token. |
 
@@ -261,13 +257,7 @@ To run the tests first run
 npm install
 ```
 
-Then start the test server
-
-```
-npm run server
-```
-
-Then execute in a second bash
+Then execute
 
 ```
 npm run test
