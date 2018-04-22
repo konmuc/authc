@@ -135,23 +135,19 @@ export function create() {
      */
     UserSchema.statics.getByToken = async function({ refreshToken }) {
         try {
-            var user;
-            try {
-                const { User } = await import('../models');
-                user = await User.findOne({ 'clients.refreshToken' : refreshToken }).exec();
-            } catch (err) {
-                console.error(err);
-                throw new Error(errors.user.not.found);
-            }
+            const { User } = await import('../models');
+            const user = await User.findOne({ 'clients.refreshToken' : refreshToken }).exec();
     
             if (!user) {
-                throw new Error(errors.user.not.found);
+                throw new Error(`No user found for refreshToken=${refreshToken}`);
             }
     
             return { user };
         } catch (err) {
-            err.status = 401;
-            throw err;
+            console.error(err);
+            let err2 = new Error(errors.user.not.found);
+            err2.status = 401;
+            throw err2;
         }
     };
 
@@ -166,23 +162,19 @@ export function create() {
      */
     UserSchema.statics.getByUsername = async function({ username }) {
         try {
-            var user;
-            try {
-                const { User } = await import('../models');
-                user = await User.findOne({ username }).exec();
-            } catch (err) {
-                console.error(err);
-                throw new Error(errors.user.not.found);
-            }
+            const { User } = await import('../models');
+            const user = await User.findOne({ username }).exec();
     
             if (!user) {
-                throw new Error(errors.user.not.found);
+                throw new Error(`No user found for username=${username}`);
             }
     
             return { user };
         } catch (err) {
-            err.status = 401;
-            throw err;
+            console.error(err);
+            let err2 = new Error(errors.user.not.found);
+            err2.status = 401;
+            throw err2;
         }
     };
 
