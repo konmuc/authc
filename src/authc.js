@@ -56,9 +56,10 @@ export async function signup(userData) {
     // hash the passed password
     userData.password = await bcrypt.hash(userData.password, 10);
     
-    let user = await User.get({ username: userData.username })
+    // verify that the username is available
+    let exists =  await User.exists({ username: userData.username });
 
-    if (user) {
+    if (exists) {
         let err = new Error('User already exists!');
         err.status = 409;
         throw err;
