@@ -105,13 +105,12 @@ export async function signout({ username, clientId }) {
  * Allows a user to renew its access token.
  * 
  * @param {Object} params
- * @param {String} params.username The username of the user.
  * @param {String} params.refreshToken The refreshToken of the user.
  * @param {String} params.clientId The users related clientId.
  */
-export async function token({ username, refreshToken, clientId }) {
+export async function token({ refreshToken, clientId }) {
     // first authenticate the user.
-    const { user } = await User.authenticateByToken({ username, refreshToken, clientId });
+    const { user } = await User.authenticateByToken({ refreshToken, clientId });
     
     // generate the accesstoken
     return generateAccessToken({ user, clientId });
