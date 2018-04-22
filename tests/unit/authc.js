@@ -1,6 +1,8 @@
 /* global intern console */
 import fetch from 'node-fetch';
 import server from '../server';
+import { errors } from '../../src/messages';
+import configure from '../../src/index';
 
 const { assert } = intern.getPlugin('chai');
 const { registerSuite } = intern.getInterface('object');
@@ -10,6 +12,15 @@ const password = 'password';
 const port = 9999;
 const url = `http://localhost:${port}`
 const headers = { 'Content-Type': 'application/json' };
+
+registerSuite('middleware tests', () => {
+    return {
+        'middleware without secret': () => {
+            assert.throws(configure);
+        }
+    }
+});
+  
 
 registerSuite('authentication tests', () => {
 
@@ -56,9 +67,10 @@ registerSuite('authentication tests', () => {
     
                 let res = await fetch(`${url}/signup`, request);
 
-                let { status } = await res.json();
+                let { status, message } = await res.json();
 
                 assert.equal(status, 409);
+                assert.equal(message, errors.user.already.exists);
             },
 
 
@@ -104,6 +116,31 @@ registerSuite('authentication tests', () => {
                 CLIENT_ID = clientId;
             },
 
+
+            'sign unknown user in': async() => {
+                // build the reqest body
+                const body = JSON.stringify({
+                    username: 'invalid',
+                    password
+                });
+
+                // build the request object
+                const request = {
+                    method: 'POST',
+                    headers: { ...headers },
+                    body
+                };
+
+                // trigger signin request
+                const res = await fetch(`${url}/signin`, request);
+
+                let { status, message } = await res.json();
+
+                assert.equal(status, 401);
+                assert.equal(message, errors.invalid.userOrPassword);
+            },
+
+
             'acccess secured resource': async() => {
                 // build the request object
                 const request = {
@@ -145,9 +182,10 @@ registerSuite('authentication tests', () => {
                 const res = await fetch(`${url}/`, request);
 
                 // parse response to json
-                const { status } = await res.json();
+                const { status, message } = await res.json();
 
                 assert.equal(status, 401);
+                assert.equal(message, errors.invalid.token);
             },
 
 
@@ -167,6 +205,7 @@ registerSuite('authentication tests', () => {
                 const { status, message } = await res.json();
 
                 assert.equal(status, 401);
+                assert.equal(message, errors.missing.token);
             },
 
 
@@ -176,8 +215,7 @@ registerSuite('authentication tests', () => {
                 // build the request body
                 const body = JSON.stringify({
                     clientId: CLIENT_ID,
-                    refreshToken: REFRESH_TOKEN,
-                    username: USERNAME
+                    refreshToken: REFRESH_TOKEN
                 });
 
                 // build the request object
@@ -203,6 +241,30 @@ registerSuite('authentication tests', () => {
                 assert.equal(status, 200);
                 assert.isString(accessToken);
                 assert.isNumber(expiresIn);
+            },
+
+
+            'request a new access token with an invalid refresh token': async() => {
+                // build the request body
+                const body = JSON.stringify({
+                    clientId: CLIENT_ID,
+                    refreshToken: 'invalid'
+                });
+
+                // build the request object
+                const request = {
+                    method: 'POST',
+                    headers: { ...headers },
+                    body
+                };
+
+                // trigger signin request
+                const res = await fetch(`${url}/token`, request);
+
+                let { status, message } = await res.json();
+
+                assert.equal(status, 401);
+                assert.equal(message, errors.invalid.token);
             },
 
 
@@ -255,11 +317,10 @@ registerSuite('authentication tests', () => {
                 const res = await fetch(`${url}/signout`, request);
 
                 // parse response to json
-                const {
-                    status
-                } = await res.json();
+                const { status, message } = await res.json();
 
                 assert.equal(status, 401);
+                assert.equal(message, errors.user.already.loggedOut);
             },
 
 
@@ -276,14 +337,11 @@ registerSuite('authentication tests', () => {
                 // request secured resource with invalid credentials
                 const res = await fetch(`${url}/`, request);
                 // parse response to json
-                const {
-                    status,
-                    ...error
-                } = await res.json();
+                const { status, message } = await res.json();
 
                 // some assertations
-                assert.isNotEmpty(error);
                 assert.equal(status, 401);
+                assert.equal(message, errors.invalid.token);
             }
         }
     };

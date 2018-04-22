@@ -1,8 +1,9 @@
 /* global intern */
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
-import UserSchema from '../../../src/schemas/UserSchema';
+import { create, configure } from '../../../src/schemas/UserSchema';
 import User from '../../../src/models/User';
+import { errors } from '../../../src/messages';
 
 const { assert } = intern.getPlugin('chai');
 const { registerSuite } = intern.getInterface('object');
@@ -59,15 +60,21 @@ registerSuite('user schema tests', () => {
 
         tests: {
             'configure user schema': () => {
-                const Schema = UserSchema.create();
+                const Schema = create();
     
-                UserSchema.configure({
+                configure();
+
+                const NonModifiedSchema = create();
+
+                assert.deepEqual(Schema.obj, NonModifiedSchema.obj);
+
+                configure({
                     address: {
                         type: String,
                     }
                 });
     
-                const ModifiedSchema = UserSchema.create();
+                const ModifiedSchema = create();
     
                 assert.notDeepEqual(Schema.obj, ModifiedSchema.obj);
             },
@@ -104,6 +111,7 @@ registerSuite('user schema tests', () => {
                 }
 
                 assert.isNotNull(error);
+                assert.equal(error.message, errors.invalid.userOrPassword);
             },
 
 
@@ -111,12 +119,13 @@ registerSuite('user schema tests', () => {
                 let error;
                 
                 try {
-                    await User.authenticateByPassword({ username: USERNAME, password: PASSWORD });
+                    await User.authenticateByPassword({ username: USERNAME, password: 'invalid' });
                 } catch (err) {
                     error = err;
                 }
 
                 assert.isNotNull(error);
+                assert.equal(error.message, errors.invalid.userOrPassword);
             },
 
 
@@ -137,6 +146,7 @@ registerSuite('user schema tests', () => {
                 }
 
                 assert.isNotNull(error);
+                assert.equal(error.message, errors.invalid.token);
             },
 
 
@@ -150,6 +160,7 @@ registerSuite('user schema tests', () => {
                 }
 
                 assert.isNotNull(error);
+                assert.equal(error.message, errors.invalid.token);
             }
         }
     }; 
