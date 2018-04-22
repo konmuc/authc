@@ -6,8 +6,7 @@
     "reporters": [
         "runner",
         {
-          "name": "jsoncoverage",
-          "filename": "coverage.json"
+          "name": "lcov"
         }
     ],
     "instrumenterOptions": { "esModules": true }
