@@ -1,11 +1,15 @@
 /* global intern console */
 import fetch from 'node-fetch';
-import server from '../server';
+import initServer from '../server';
 import { errors } from '../../src/messages';
 import configure from '../../src/index';
 
 const { assert } = intern.getPlugin('chai');
 const { registerSuite } = intern.getInterface('object');
+
+intern.on('runEnd', () => {
+    process.exit();
+})
 
 const USERNAME = 'testuser';
 const password = 'password';
@@ -20,17 +24,17 @@ registerSuite('middleware tests', () => {
         }
     }
 });
-  
 
 registerSuite('authentication tests', () => {
 
     var REFRESH_TOKEN;
     var ACCESS_TOKEN;
     var CLIENT_ID;
+    var server;
 
     return {
         async before() {
-            await server();
+            server = await initServer();
 
             const body = JSON.stringify({
                 username: USERNAME,
@@ -48,6 +52,10 @@ registerSuite('authentication tests', () => {
             let { status } = await res.json();
 
             assert.oneOf(status, [ 200, 409 ]);
+        },
+
+        after() {
+            server.close();
         },
 
 

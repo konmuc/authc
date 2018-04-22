@@ -1,3 +1,4 @@
+/* global Promise */
 import mongoose from 'mongoose';
 import express from 'express';
 import logger from 'morgan';
@@ -8,7 +9,7 @@ import authRouter from '../src/router';
 
 const port = 9999;
 
-export default async function run() {
+export default async function initServer() {
     await mongoose.connect('mongodb://localhost/authctest');
 
     return new Promise((resolve) => {
@@ -51,6 +52,9 @@ export default async function run() {
             res.status(status).send({ status, message });
         });
 
-        app.listen(port, () => { console.info(`Listening on port ${port}`); resolve() });
+        let server = app.listen(port, () => {
+            console.info(`Listening on port ${port}`);
+            resolve(server);
+        });
     });
 }
