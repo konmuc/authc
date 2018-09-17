@@ -26,7 +26,8 @@ var schema = {
             },
             invalidated: Boolean
         }
-    ]
+    ],
+    role: { type: String, default: 'user' }
 };
 
 
